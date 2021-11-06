@@ -1,7 +1,7 @@
-import { Mongoose } from "mongoose";
-import { useVirtualId } from "../db/database";
+import Mongoose from "mongoose";
+import { useVirtualId } from "../db/database.js";
 
-const schema = Mongoose.Schema({
+const schema = new Mongoose.Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },
     username: { type: String, required: true },
@@ -14,9 +14,10 @@ const schema = Mongoose.Schema({
     }]
 })
 
+useVirtualId(schema);
+
 const User = Mongoose.model('User', schema);
 
-useVirtualId(User);
 
 
 export async function createUser(user) {
@@ -27,11 +28,23 @@ export async function createUser(user) {
     })
 }
 
-export async function findById(id) {
+export async function findUsers(ids) {
+    let users = [];
+    ids.forEach(id => {
+        User.findById(id, 'username profile').then(user => {
+            const { username, profile } = user;
+            users.push({ username, profile });
+        })
+    })
 
+    return users;
+}
+
+export async function findById(id) {
+    return User.findById(id)
 
 }
 
 export async function findByEmail(email) {
-
+    return User.find({ email })
 }

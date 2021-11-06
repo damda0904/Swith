@@ -1,7 +1,8 @@
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt'
 import { config } from '../config.js';
-import * as userRepository from '../data/auth.js';
+import * as userRepository from '../data/user.js';
+import * as groupRepository from '../data/group.js';
 
 const jwtSecretKey = config.jwt.secretKey;
 const jwtExpires = config.jwt.expiresInDays;
@@ -35,7 +36,7 @@ export async function signup(req, res) {
 
     const token = await createToken(userId);
 
-    res.status(201).json({ token });
+    res.status(201).json({ token, success: true });
 }
 
 
@@ -55,7 +56,7 @@ export async function login(req, res) {
     }
 
     const token = await createToken(user.id);
-    res.status(200).json({ token })
+    res.status(200).json({ token, success: true })
 }
 
 
@@ -85,6 +86,21 @@ export async function authEmail(req, res) {
     // })
 
     res.status(200).json({
-        code: code
+        code: code, success: true
     })
 }
+
+//내 스터디들 미리보기
+export async function getMyGroups(req, res) {
+    const userId = req.userId;
+
+    const user = await userRepository.findById(userId);
+    if (!user.studyGroup) {
+        res.status(200).json({ group: "empty", success: true })
+    }
+    else {
+        const group = await groupRepository.findMyGroups(userId, user.studyGroup);
+        res.status(200).json({ ...group, success: true })
+    }
+}
+
