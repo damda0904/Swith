@@ -1,7 +1,9 @@
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt'
 import { config } from '../config.js';
-import * as userRepository from '../data/auth.js';
+import * as userRepository from '../data/user.js';
+import * as groupRepository from '../data/group.js';
+import jwt from 'jsonwebtoken'
 
 const jwtSecretKey = config.jwt.secretKey;
 const jwtExpires = config.jwt.expiresInDays;
@@ -17,25 +19,27 @@ function createToken(id) {
 export async function signup(req, res) {
     const { email, password, username, major, studentId, profile } = req.body;
 
-    const findEmail = userRepository.findByEmail(email)
+    const findEmail = await userRepository.findByEmail(email)
+    console.log(findEmail);
     if (findEmail) {
         res.status(409).json({ message: "이미 등록된 이메일입니다." })
     }
+    else {
+        const hashed = await bcrypt.hash(password, bcryptSalt);
 
-    const hashed = await bcrypt.hash(password, bcryptSalt);
+        const userId = await userRepository.createUser({
+            email,
+            password: hashed,
+            username,
+            major,
+            studentId,
+            profile,
+        })
 
-    const userId = await userRepository.createUser({
-        email,
-        password: hashed,
-        username,
-        major,
-        studentId,
-        profile,
-    })
+        const token = await createToken(userId);
 
-    const token = await createToken(userId);
-
-    res.status(201).json({ token });
+        res.status(201).json({ token, success: true });
+    }
 }
 
 
@@ -55,7 +59,7 @@ export async function login(req, res) {
     }
 
     const token = await createToken(user.id);
-    res.status(200).json({ token })
+    res.status(200).json({ token, success: true })
 }
 
 
@@ -85,6 +89,21 @@ export async function authEmail(req, res) {
     // })
 
     res.status(200).json({
-        code: code
+        code: code, success: true
     })
 }
+
+//내 스터디들 미리보기
+export async function getMyGroups(req, res) {
+    const userId = req.userId;
+
+    const user = await userRepository.findById(userId);
+    if (!user.studyGroup) {
+        res.status(200).json({ group: "empty", success: true })
+    }
+    else {
+        const group = await groupRepository.findMyGroups(userId, user.studyGroup);
+        res.status(200).json({ ...group, success: true })
+    }
+}
+
