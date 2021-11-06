@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import authRouter from './router/authRouter.js'
 import { config } from './config.js';
+import { connectDB } from './db/database.js';
 
 const app = express();
 const router = express.Router();
@@ -27,5 +28,7 @@ app.use((error, req, res, next) => {
     res.sendStatus(500);
 })
 
-const server = app.listen(config.host.port);
-console.log("listening")
+connectDB().then(() => {
+    const server = app.listen(config.host.port);
+    console.log("listening")
+})

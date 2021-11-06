@@ -17,5 +17,15 @@ export const config = {
     gmail: {
         address: required('GMAIL_ADDRESS'),
         passwd: required('GMAIL_PASSWORD'),
+    },
+    db: {
+        host: required('DB_HOST')
+    },
+    jwt: {
+        secretKey: required('JWT_SECRET'),
+        expiresInDays = required('JWT_EXPIRES')
+    },
+    bcrypt: {
+        salt: required('BCRYPT_SALT')
     }
 }
