@@ -1,0 +1,35 @@
+{
+  "name": "swith",
+  "version": "1.0.0",
+  "description": "application to gather study group in SWU",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sookmyung-Software-Hackathon/Swith_team9.git"
+  },
+  "author": "jisu_lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sookmyung-Software-Hackathon/Swith_team9/issues"
+  },
+  "homepage": "https://github.com/Sookmyung-Software-Hackathon/Swith_team9#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-validator": "^6.13.0",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.1.4",
+    "mongoose": "^6.0.12",
+    "nodemailer": "^6.7.0",
+    "nodemon": "^2.0.14"
+  }
+}
