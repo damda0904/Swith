@@ -3,10 +3,12 @@ import { StyleSheet, View, Text, Image } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import Axios from 'axios';
 import {useNavigation} from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen= () => {
     const [userEmail,setUserEmail] = useState('');
     const [userPassword,setUserPassword] = useState('');
+    const [errorText,setErrorText] = useState('');
 
     const navigation = useNavigation();
 
@@ -19,11 +21,12 @@ const LoginScreen= () => {
         // Axios.post('http://127.0.0.1:8080/auth/login',loginInfo)
         // .then(response=>{
         // if(response.data.success === true){
-        //     props.setIsLogin(true)
-        //     props.setLoginUser(response.data.token)
+        // 유저 이메일 저장하기!
+        //     AsyncStorage.setItem('user_id',responseJson.data.userEmail); 
+        //      navigation.replace('Home');
         // }else{
-        //     alert('fail login')
-        //     console.warn(response.status)
+        //     setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
+        //     alert(response.status);
         // }
         // }).catch((error)=>{
         // alert(error)
@@ -49,14 +52,15 @@ const LoginScreen= () => {
                 onChangeText={(userPassword)=>setUserPassword(userPassword)}
                 autoCapitalize="none"
             />
+            <Text style={styles.errorText}>{errorText}</Text>
+            <TouchableOpacity style={styles.loginButton} onPress={()=>submitLogin()}>
+                <Text style={styles.loginButtonText}>로그인</Text>
+            </TouchableOpacity>
             <Text
                 style={styles.signup} 
                 onPress={()=>navigation.push('Signup')}>
                     회원가입
             </Text>
-            <TouchableOpacity style={styles.loginButton} onPress={()=>submitLogin()}>
-                <Text style={styles.loginButtonText}>로그인</Text>
-            </TouchableOpacity>
         </View>
     )
 }
@@ -77,7 +81,8 @@ const styles = StyleSheet.create({
   },
   signup:{
       color:'#303030',
-      marginTop:10
+      marginTop:15,
+      fontSize:13
   },
   textInput:{
     width:'90%',
@@ -90,6 +95,11 @@ const styles = StyleSheet.create({
     paddingVertical:10,
     paddingHorizontal:20,
     margin:5
+  },
+  errorText:{
+      fontSize:12,
+      color:'red',
+      marginTop:5
   },
   loginButton:{
     width:350,
