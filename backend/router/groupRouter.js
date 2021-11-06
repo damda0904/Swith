@@ -14,7 +14,7 @@ router.get('/:id', controller.getGroupInfo)
 router.get('/', controller.getGroups)
 
 //참여 스터디 정보 보기
-router.get('/info/:id', controller.getInfo)
+router.get('/info/:id', isAuth, controller.getInfo)
 
 //스터디 생성
 router.post('/', isAuth, controller.createGroup);

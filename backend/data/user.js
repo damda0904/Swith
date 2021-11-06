@@ -46,5 +46,6 @@ export async function findById(id) {
 }
 
 export async function findByEmail(email) {
-    return User.find({ email })
+    console.log(email)
+    return User.findOne({ email })
 }

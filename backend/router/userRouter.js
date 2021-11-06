@@ -2,6 +2,7 @@ import express from 'express'
 import { body } from 'express-validator';
 import * as controller from '../controller/userController.js';
 import { validate, checkEmail } from '../middleware/validate.js';
+import { isAuth } from '../middleware/isAuth.js'
 
 const router = express.Router();
 

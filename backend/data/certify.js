@@ -1,7 +1,9 @@
 import mongoose from 'mongoose'
-import useVirtualId from '../db/database.js';
+import { useVirtualId } from '../db/database.js';
+import * as userRepository from '../data/user.js';
+import * as groupRepository from './group.js';
 
-const schema = new mongoose.schema({
+const schema = new mongoose.Schema({
     studyGroupId: { type: Number, required: true },
     title: { type: String, required: true },
     achieve: [String],
@@ -16,8 +18,17 @@ useVirtualId(schema)
 
 const Certify = mongoose.model('Certify', schema);
 
-export async function certify(id) {
+export async function certify(userId, groupId, certify) {
+    const user = await userRepository.findById(userId);
+    const group = await groupRepository.findById(groupId);
 
-    //아직 인증하지 않았었는지 확인
-    return new Certify()
+    return new Certify({
+        ...certify,
+        studyGroupId: groupId,
+        title: group.title,
+        userId: userId,
+        username: user.username
+    }).save().then(data => {
+        return data.id;
+    })
 }

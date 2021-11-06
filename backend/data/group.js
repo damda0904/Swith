@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { useVirtualId } from '../db/database';
+import { useVirtualId } from '../db/database.js';
 import * as userRepository from './user.js';
 
 const schema = new mongoose.Schema({
@@ -38,7 +38,7 @@ export async function createGroup(group) {
 //스터디 찾기(Id)
 export async function findById(id) {
     return StudyGroup.findById(id)
-        .then(group => {
+        .then(async (group) => {
             console.log("group: " + group);
 
             const participants = await userRepository.findUsers(group.participants)
