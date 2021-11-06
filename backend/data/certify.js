@@ -4,12 +4,12 @@ import * as userRepository from '../data/user.js';
 import * as groupRepository from './group.js';
 
 const schema = new mongoose.Schema({
-    studyGroupId: { type: Number, required: true },
+    studyGroupId: { type: String, required: true },
     title: { type: String, required: true },
     achieve: [String],
     notAchieve: [String],
     certifiedImg: { type: String, required: true },
-    userId: { type: Number, required: true },
+    userId: { type: String, required: true },
     username: { type: String, required: true },
     week: { type: String, required: true }
 }, { timestamp: true })

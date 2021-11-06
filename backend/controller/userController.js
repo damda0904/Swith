@@ -103,7 +103,7 @@ export async function getMyGroups(req, res) {
     }
     else {
         const group = await groupRepository.findMyGroups(userId, user.studyGroup);
-        res.status(200).json({ ...group, success: true })
+        res.status(200).json({ group, success: true })
     }
 }
 

@@ -6,9 +6,9 @@ const AUTH_ERROR = { message: 'Authentication Error' }
 
 export const isAuth = async (req, res, next) => {
 
-    const authHeader = req.get('Authentication');
-    if (!(authHeader && authHeader.startWith('Bearer '))) {
-        res.status(401).json(AUTH_ERROR);
+    const authHeader = req.get('Authorization');
+    if (!(authHeader && authHeader.startsWith('Bearer '))) {
+        return res.status(401).json(AUTH_ERROR);
     }
 
     const token = authHeader.split(' ')[1]
@@ -18,7 +18,7 @@ export const isAuth = async (req, res, next) => {
         async (error, decode) => {
             if (error) {
                 console.log(error);
-                res.status(401).json(AUTH_ERROR)
+                return res.status(401).json(AUTH_ERROR)
             }
 
             const user = await userRepository.findById(decode.id);
@@ -27,7 +27,7 @@ export const isAuth = async (req, res, next) => {
                 res.status(401).json(AUTH_ERROR)
             }
 
-            req.userId = user.id.AUTH_ERROR
+            req.userId = user.id;
 
             next();
         })

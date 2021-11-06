@@ -56,6 +56,18 @@ export async function findPrivate(groupId, userId) {
 //todolist 리셋
 
 //내 todo 가져오기
-export async function findByUserId(userid) {
+export async function findMyList(groupIds, userId) {
+    let list = []
+    groupIds.forEach(async (id) => {
+        await findCommon(id).then(item => {
+            list.push(item)
+        })
 
+        await findPrivate(id, userId)
+            .then(itme => {
+                list.push(item)
+            })
+    })
+
+    return list;
 }

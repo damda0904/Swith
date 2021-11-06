@@ -8,13 +8,15 @@ export async function createGroup(req, res) {
     const userId = req.userId;
     const day = 24 * 60 * 60 * 1000;
     const totalDays = parseInt(((Date.parse(endDate) - Date.parse(startDate)) / day) + 1)
-    const totalWeeks = (totalDays + 6) / 7
+    const totalWeeks = Math.floor((totalDays + 6) / 7)
 
     const groupId = await groupRepository.createGroup({
         category,
         mainImage,
         title,
         description,
+        startDate,
+        endDate,
         keyword,
         faceToFace,
         personnel,
@@ -41,7 +43,8 @@ export async function getGroupInfo(req, res) {
         follower = true;
     }
 
-    res.status(200).json({ ...group, leading: lead, following: follower, success: true });
+    res.status(200).json(group)
+    //res.status(200).json({ group, leading: lead, following: follower, success: true });
 }
 
 //참여중인 스터디 정보 보기
@@ -50,7 +53,7 @@ export async function getInfo(req, res) {
 
     const group = await groupRepository.findById(id);
 
-    res.status(200).json({ ...group, success: true });
+    res.status(200).json({ group, success: true });
 
 }
 
@@ -70,13 +73,15 @@ export async function getGroups(req, res) {
         group = await groupRepository.findGroupsByKey(keyword);
     }
 
-    res.status(200).json({ ...group, success: true });
+    res.status(200).json({ group, success: true });
 }
 
 //스터디 지원
 export async function apply(req, res) {
     const id = req.params.id;
     const userId = req.userId;
+
+    console.log(userId);
 
     const groupId = await groupRepository.apply(id, userId);
 
