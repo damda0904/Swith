@@ -13,24 +13,24 @@ const LoginScreen= () => {
     const navigation = useNavigation();
 
     const submitLogin = () => {
-        // let loginInfo = {
-        // email:userEmail,
-        // password:userPassword
-        // };
+        let loginInfo = {
+        email:userEmail,
+        password:userPassword
+        };
 
         // Axios.post('http://127.0.0.1:8080/auth/login',loginInfo)
         // .then(response=>{
         // if(response.data.success === true){
-        // 유저 이메일 저장하기!
+        // // 유저 이메일 저장하기!
         //     AsyncStorage.setItem('user_id',responseJson.data.userEmail); 
-        //      navigation.replace('Home');
+        //     navigation.replace('Home');
         // }else{
         //     setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
         //     alert(response.status);
         // }
         // }).catch((error)=>{
-        // alert(error)
-        // console.warn(error)
+        //     alert(error)
+        //     console.warn(error)
         // })
     }
 
