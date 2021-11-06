@@ -1,26 +1,36 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React,{useState} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Axios from 'axios';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
-export default function App() {
+//components
+import HomeScreen from './src/components/screens/HomeScreen';
+import SignupScreen from './src/components/screens/SignupScreen';
+import LoginScreen from './src/components/screens/LoginScreen';
+import SplashScreen from './src/components/screens/SplashScreen';
 
-  Axios.get('http://127.0.0.1:8080/test')
-    .then(response=>{
-      if(response.status == 200){
-        console.warn(response.data.message)
-      }else{
-        console.warn(response.status)
-      }
-    }).catch((error)=>{
-      console.warn(error)
-    })
-    
+const Stack = createStackNavigator();
+
+const Auth = () => {
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Signup" component={SignupScreen} />
+    </Stack.Navigator>
+  )
+}
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="SplashScreen">
+        <Stack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="Auth" component={Auth} options={{headerShown: false}}/>
+        <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -30,5 +40,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    color:'black'
   },
 });
+
+export default App
