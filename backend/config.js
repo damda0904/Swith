@@ -23,9 +23,9 @@ export const config = {
     },
     jwt: {
         secretKey: required('JWT_SECRET'),
-        expiresInDays = required('JWT_EXPIRES')
+        expiresInDays: required('JWT_EXPIRES_SEC', 86400)
     },
     bcrypt: {
-        salt: required('BCRYPT_SALT')
+        salt: parseInt(required('BCRYPT_SALT'))
     }
 }

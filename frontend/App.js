@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Axios from 'axios';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 //components
 import HomeScreen from './src/components/screens/HomeScreen';
@@ -12,6 +13,11 @@ import LoginScreen from './src/components/screens/LoginScreen';
 import SplashScreen from './src/components/screens/SplashScreen';
 
 const Stack = createStackNavigator();
+const HomeStack = createStackNavigator();
+const MyStudyStack = createStackNavigator();
+const NotiStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const Auth = () => {
   return(
@@ -22,13 +28,23 @@ const Auth = () => {
   )
 }
 
+const HomeStackScreen = () => {
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen}/>
+      <Stack.Screen name="Search" component={SearchStudy}/>
+      <Stack.Screen name="Detail" component={StudyDetail}/>
+    </Stack.Navigator>
+  )
+}
+
 const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="SplashScreen">
         <Stack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Auth" component={Auth} options={{headerShown: false}}/>
-        <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="Home" component={MainScreen} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
