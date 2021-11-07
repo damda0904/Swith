@@ -194,8 +194,7 @@ export async function getGroupInfo(req, res) {
         follower = true;
     }
 
-    res.status(200).json(group)
-    //res.status(200).json({ group, leading: lead, following: follower, success: true });
+    res.status(200).json({ group, leading: lead, following: follower, success: true });
 }
 
 //참여중인 스터디 정보 보기

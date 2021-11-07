@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{useState} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Ionic from "react-native-vector-icons/Ionicons";
 import Axios from 'axios';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -41,6 +42,7 @@ import NoticeScreen from './src/components/screens/Main/noticification/NoticeScr
 
 //mypage
 import ProfileScreen from './src/components/screens/Main/mypage/MypageScreen';
+import SearchDetail from './src/components/screens/Main/search/SearchDetail';
 
 const Stack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -70,6 +72,7 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name="SearchJob" component={SearchJobStudy} options={{headerShown: false}}/>
       <HomeStack.Screen name="SearchSelf" component={SearchSelfStudy} options={{headerShown: false}}/>
       <HomeStack.Screen name="SearchExam" component={SearchExamStudy} options={{headerShown: false}}/>
+      <HomeStack.Screen name="SearchDetail" component={SearchDetail} options={{headerShown: false}}/>
       <HomeStack.Screen name="Detail" component={StudyDetail} options={{headerShown: false}}/>
       <HomeStack.Screen name="RegisterStudy" component={RegisterStudy} options={{headerShown: false}}/>
     </Stack.Navigator>
@@ -105,7 +108,31 @@ const ProfileStackScreen = () => {
 
 const MainTabScreen = () => {
   return(
-    <Tab.Navigator initialRouteName="HomeStack" options={{headerShown: false}}>
+    <Tab.Navigator 
+      initialRouteName="HomeStack" 
+      options={{headerShown: false}}
+      screenOptions={({route}) => ({
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarStyle:{
+            height:80
+          },
+          backgroundColor:'#000',
+          tabBarIcon:({focused,size,colour})=>{
+            let iconName;
+            if(route.name === 'HomeStack'){
+              iconName= focused?"home" : "home-outline";
+            }else if(route.name === 'MyStudyStack'){
+              iconName= focused?"layers" : "layers-outline";
+            }else if(route.name === 'NotiStack'){
+              iconName= focused? "notifications" : "notifications-outline";
+            }else if(route.name === 'ProfileStack'){
+              iconName= focused? "ios-person-circle" : "ios-person-outline";
+            }
+
+            return <Ionic name={iconName} size={30} color={colour}/>
+          }
+        })}>
       <Tab.Screen name="HomeStack" component={HomeStackScreen} options={{headerShown: false}}/>
       <Tab.Screen name="MyStudyStack" component={MyStudyStackScreen} options={{headerShown: false}}/>
       <Tab.Screen name="NotiStack" component={NotiStackScreen} options={{headerShown: false}}/>

@@ -4,19 +4,12 @@ import InputEmail from '../screenComponents/Auth/InputEmail';
 import ConfirmEmail from '../screenComponents/Auth/ConfirmEmail';
 import SignupInfo from '../screenComponents/Auth/SignupInfo';
 import { createStackNavigator } from "@react-navigation/stack";
-import {useNavigation} from "@react-navigation/native";
-import Axios from 'axios';
 
 const SignUpScreen = () => {
     const Stack = createStackNavigator();
-    const navigation = useNavigation();
 
     const [email,setEmail] = useState('');
     const [isConfirm,setIsConfirm] = useState(false)
-    const [password,setPassword] = useState('')
-    const [username,setUsername] = useState('')
-    const [major,setMajor] = useState('')
-    const [studentId,setStudentId] = useState('')
     
    
 

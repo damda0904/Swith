@@ -1,23 +1,16 @@
 import React,{useState,useEffect} from 'react'
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Text, TextInput, TouchableOpacity,ScrollView } from 'react-native'
 import Ionic from "react-native-vector-icons/Ionicons";
 import {useNavigation} from "@react-navigation/native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchStudyItem from '../../../screenComponents/Main/SearchStudyItem'
 import Axios from 'axios'
+import { createStackNavigator } from "@react-navigation/stack";
+import SearchDetail from './SearchDetail';
 
 const SearchEngStudy = () => {
 
     const navigation = useNavigation();
-
-    let title = "제목"
-    let desc = "내용내용"
-    let startDate = "2021.09.20"
-    let endDate = "2021.11.20"
-    let person = 5
-    let offline = "대면"
-
-    const [searchKeyword,setSearchKeyword] = useState('')
     const [searchList,setSearchList] = useState([])
 
     const category = '어학'
@@ -25,11 +18,9 @@ const SearchEngStudy = () => {
         Axios.get(`http://localhost:8080/group?category=${category}`)
         .then(response=>{
             if(response.data.success === true){
-                alert('success get study list')
                 setSearchList(response.data.group)
-                console.warn(searchList)
             }else{
-                alert('아직 자격증 스터디가 없네요!'+response.status);
+                alert(`아직 ${category} 스터디가 없네요!`);
             }
         }).catch((error)=>{
             alert(error)
@@ -37,16 +28,40 @@ const SearchEngStudy = () => {
         })
     },[])
 
+    const [searchKeyword,setSearchKeyword] = useState('')
+
+    const searchStudy = (keyword) => {
+        Axios.get(`http://localhost:8080/group?category=${category}&keyword=${keyword}`)
+        .then(response=>{
+            if(response.data.success === true){
+                setSearchList(response.data.group)
+            }else{
+                alert('해당하는 스터디가 없네요!');
+            }
+        }).catch((error)=>{
+            alert(error)
+            console.warn(error)
+        })
+    }
+
     const renderStudyGroup = searchList.map((group,index)=>{
         return(
-            <SearchStudyItem key={index}
-                title={group.title} 
-                desc={group.desc} 
-                startDate={group.startDate} 
-                endDate={group.endDate} 
-                person={group.person} 
-                offline={group.offline}
-            />
+            <TouchableOpacity key={index} onPress={()=>
+                    navigation.navigate('SearchDetail',{...group})
+                }>
+                <SearchStudyItem
+                    title={group.title} 
+                    desc={group.description} 
+                    startDate={group.startDate} 
+                    endDate={group.endDate} 
+                    person={group.personnel} 
+                    offline={group.faceToFace}
+                    keyword={group.keyword}
+                    participants={group.participants}
+                    leader={group.leader}
+                    recruit={group.recruit}
+                />
+            </TouchableOpacity>
         )
     })
     
@@ -59,15 +74,17 @@ const SearchEngStudy = () => {
                     <TouchableOpacity style={styles.back} onPress={()=>navigation.goBack()}>
                         <Ionic name="arrow-back" style={{fontSize:25,color:'black'}}/>
                     </TouchableOpacity>
-                    <Text style={styles.category}>어학</Text>
+                    <Text style={styles.category}>{category}</Text>
                 </View>
                 <TextInput
                     placeholder="찾고싶은 스터디를 검색해보세요!"
                     style={styles.searchInput}
+                    onChangeText={(searchKeyword)=>setSearchKeyword(searchKeyword)}
+                    onSubmitEditing={()=>searchStudy(searchKeyword)}
                 />
-                <View style={styles.studyList}>
+                <ScrollView horizontal={false} contentContainerStyle={styles.studyList}>
                     {renderStudyGroup}
-                </View>
+                </ScrollView>
             </View>
         </SafeAreaView>
     )

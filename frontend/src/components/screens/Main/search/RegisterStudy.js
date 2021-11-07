@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     color:'black',
     paddingHorizontal:20,
+    paddingTop:60
   },
   back:{
     position:'absolute',
