@@ -1,9 +1,10 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
 import Ionic from "react-native-vector-icons/Ionicons";
 import {useNavigation} from "@react-navigation/native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchStudyItem from '../../../screenComponents/Main/SearchStudyItem'
+import Axios from 'axios'
 
 const SearchEngStudy = () => {
 
@@ -15,6 +16,42 @@ const SearchEngStudy = () => {
     let endDate = "2021.11.20"
     let person = 5
     let offline = "대면"
+
+    const [searchKeyword,setSearchKeyword] = useState('')
+    const [searchList,setSearchList] = useState([])
+
+    const category = '어학'
+    useEffect(()=>{
+        Axios.get(`http://localhost:8080/group?category=${category}`)
+        .then(response=>{
+            if(response.data.success === true){
+                alert('success get study list')
+                setSearchList(response.data.group)
+                console.warn(searchList)
+            }else{
+                alert('아직 자격증 스터디가 없네요!'+response.status);
+            }
+        }).catch((error)=>{
+            alert(error)
+            console.warn(error)
+        })
+    },[])
+
+    const renderStudyGroup = searchList.map((group,index)=>{
+        return(
+            <SearchStudyItem key={index}
+                title={group.title} 
+                desc={group.desc} 
+                startDate={group.startDate} 
+                endDate={group.endDate} 
+                person={group.person} 
+                offline={group.offline}
+            />
+        )
+    })
+    
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
@@ -29,10 +66,7 @@ const SearchEngStudy = () => {
                     style={styles.searchInput}
                 />
                 <View style={styles.studyList}>
-                    <SearchStudyItem title={title} desc={desc} startDate={startDate} endDate={endDate} person={person} offline={offline}/>
-                    <SearchStudyItem title={title} desc={desc} startDate={startDate} endDate={endDate} person={person} offline={offline}/>
-                    <SearchStudyItem title={title} desc={desc} startDate={startDate} endDate={endDate} person={person} offline={offline}/>
-                    <SearchStudyItem title={title} desc={desc} startDate={startDate} endDate={endDate} person={person} offline={offline}/>
+                    {renderStudyGroup}
                 </View>
             </View>
         </SafeAreaView>
