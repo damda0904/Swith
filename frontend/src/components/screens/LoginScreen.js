@@ -22,12 +22,11 @@ const LoginScreen= () => {
         .then(response=>{
             if(response.data.success === true){
             // 유저 이메일 저장하기!
-                alert('success')
-                AsyncStorage.setItem('user_id',userEmail); 
-                navigation.replace('Home');
+                AsyncStorage.setItem('token',response.data.token);
+                navigation.replace('Main');
             }else{
                 setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
-                alert(response.status);
+                alert('아이디와 비밀번호를 다시 확인해주세요.');
             }
         }).catch((error)=>{
             alert(error)

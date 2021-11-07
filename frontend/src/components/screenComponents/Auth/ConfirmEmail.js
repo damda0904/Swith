@@ -1,29 +1,33 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import {useNavigation} from "@react-navigation/native";
 import Ionic from "react-native-vector-icons/Ionicons";
+import Axios from 'axios';
 
-const ConfirmEmail = () => {
+const ConfirmEmail = (props) => {
     const navigation = useNavigation();
     const [confirmCode,setConfirmCode] = useState(false)
     const [confirm,setConfirm] = useState(false)
     const [successMsg,setSuccessMsg] = useState('')
 
-    Axios.post('http://127.0.0.1:8080/user/authEmail',confirmCode)
-    .then(response=>{
-    if(response.data.code === confirmCode){
-    // 유저 이메일 저장하기!
-        setSuccessMsg('인증되었습니다.')
-        setConfirm(true)
-    }else{
-        setSuccessMsg('인증번호를 다시 입력해주세요.');
-        setConfirm(false)
-        alert(response.status);
+    const confirmEmail = () => {
+        Axios.post('http://127.0.0.1:8080/user/authEmail',{email:props.email})
+        .then(response=>{
+        if(response.status === 200){
+        // 유저 이메일 저장하기!
+            setSuccessMsg('인증되었습니다.')
+            setConfirm(true)
+        }else{
+            setSuccessMsg('인증번호를 다시 입력해주세요.');
+            setConfirm(false)
+            alert(response.status);
+        }
+        }).catch((error)=>{
+            alert(error)
+            console.warn(error)
+        })
     }
-    }).catch((error)=>{
-        alert(error)
-        console.warn(error)
-    })
+    
     
     return (
         <View style={styles.container}>
@@ -36,11 +40,17 @@ const ConfirmEmail = () => {
                 메일로 발송된{"\n"}인증번호를{"\n"}입력해주세요
             </Text>
             <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.textInput}
-                    onChangeText={(confirmCode)=>setConfirmCode(confirmCode)}
-                    autoCapitalize="none"
-                />
+                <View style={styles.confirmContainer}>
+                    <TextInput
+                        style={styles.textInput}
+                        onChangeText={(confirmCode)=>setConfirmCode(confirmCode)}
+                        autoCapitalize="none"
+                    />
+                    <TouchableOpacity style={styles.confirmButton} onPress={()=>confirmEmail()}>
+                        <Text style={styles.confirm}>인증하기</Text>
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.successMsg}>{successMsg}</Text>
                 <TouchableOpacity style={styles.nextButton} onPress={()=>navigation.push('SignupInfo')}>
                     <Text style={styles.next}>다음</Text>
                 </TouchableOpacity>
@@ -66,8 +76,13 @@ const styles = StyleSheet.create({
   },
   inputContainer:{
     width:'100%',
-    justifyContent:'space-between',
-    alignItems:'stretch'
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  confirmContainer:{
+      flexDirection:'row',
+      alignItems:'center',
+      marginTop:100
   },
   largeHeader:{
       left:5,
@@ -75,8 +90,8 @@ const styles = StyleSheet.create({
       lineHeight:50
   },
   textInput:{
-    width:'100%',
-    height:50,
+    width:'70%',
+    height:40,
     borderRadius:20,
     borderWidth:1,
     borderColor:'#dcdcdc',
@@ -84,7 +99,24 @@ const styles = StyleSheet.create({
     color:'black',
     paddingVertical:10,
     paddingHorizontal:20,
-    marginTop:100
+    marginRight:10
+  },
+  confirmButton:{
+    color:'white',
+    width:'25%',
+    height:40,
+    paddingVertical:10,
+    paddingHorizontal:20,
+    borderColor:'#589BFF',
+    borderRadius:20,
+    borderWidth:1,
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:5
+  },
+  confirm:{
+      fontSize:14,
+      color:'#589BFF',
   },
   nextButton:{
     color:'white',
@@ -103,6 +135,10 @@ const styles = StyleSheet.create({
       fontSize:18,
       color:'white',
       fontWeight:'600'
+  },
+  successMsg:{
+      fontSize:12,
+      marginTop:10
   }
 });
 

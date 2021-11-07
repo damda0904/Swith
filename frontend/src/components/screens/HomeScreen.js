@@ -1,40 +1,75 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { StyleSheet, View, Text, TextInput, ScrollView} from 'react-native'
 import MyStudyList from '../screenComponents/Main/MyStudyList';
 import Axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {useNavigation} from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
     const navigation = useNavigation();
     let title="카카오 코테 뿌시기"
     let endDate="2021.11.10"
     let startDate="2021.09.20"
-    const [myStudy,setMyStudy] = useState([])
-    // Axios.get('http://localhost:8080/user/myGroups')
-    // .then(response=>{
-    //     if(response.data.success === true){
-    //         setMyStudy(response.data.group)
-    //     }else{
-    //         setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
-    //         alert(response.status);
-    //     }
-    // }).catch((error)=>{
-    //     alert(error)
-    //     console.warn(error)
-    // })
 
-    // const renderMyStudyGroup = myStudy.map((group,index)=>{
-    //     return(
-    //         <MyStudyList 
-    //             key={index} 
-    //             title={group[index].title} 
-    //             startDate={group[index].startDate} 
-    //             endDate={group[index].endDate}
-    //         />
-    //     )
-    // })
+
+    const [token,setToken] = useState('');
+    AsyncStorage.getItem('token')
+    .then((value)=>setToken(value));
+
+
+    useEffect(()=>{
+        const config = {
+            headers:{"Authorization": `Bearer ${token}`}
+        };
+
+        Axios.get('http://localhost:8080/user/myGroups',config)
+        .then(response=>{
+            if(response.data.success === true){
+                alert('success get group')
+                setMyStudy(response.data.group)
+                console.warn(myStudy)
+            }else{
+                setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
+                alert('아이디와 비밀번호를 다시 확인해주세요.');
+            }
+        }).catch((error)=>{
+            alert(error)
+            console.warn(error)
+        })
+    },[])
+
+    const [searchKeyword,setSearchKeyword] = useState('')
+    const [searchAllList,setSearchAllList] = useState([])
+    const searchAllStudy = (keyword) => {
+        Axios.get(`http://localhost:8080/group?keyword=${keyword}`)
+        .then(response=>{
+            if(response.data.success === true){
+                alert('success get study list')
+                setSearchAllList(response.data.group)
+                console.warn(searchAllList)
+            }else{
+                alert('해당하는 스터디가 없네요!'+response.status);
+            }
+        }).catch((error)=>{
+            alert(error)
+            console.warn(error)
+        })
+    }
+
+    const [myStudy,setMyStudy] = useState([])
+    const renderMyStudyGroup = myStudy.map((group,index)=>{
+        return(
+            <MyStudyList 
+                key={index} 
+                title={group[index].title} 
+                startDate={group[index].startDate} 
+                endDate={group[index].endDate}
+            />
+        )
+    })
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -42,31 +77,19 @@ const HomeScreen = () => {
                     <TextInput
                         placeholder="전체 스터디를 검색해보세요!"
                         style={styles.searchInput}
+                        onChangeText={(searchKeyword)=>setSearchKeyword(searchKeyword)}
+                        onSubmitEditing={()=>searchAllStudy(searchKeyword)}
                     />
                 </View>
                 <View style={styles.myStudy}>
                     <Text style={styles.myStudyTitle}>눈송이님이 참여한 스터디</Text>
-                    <ScrollView horizontal={true}>
+                    <ScrollView style={{width:'100%'}} horizontal={true}>
                         <MyStudyList 
                             title={title} 
                             startDate={startDate} 
                             endDate={endDate}
                         />
-                        <MyStudyList 
-                            title={title} 
-                            startDate={startDate} 
-                            endDate={endDate}
-                        />
-                        <MyStudyList 
-                            title={title} 
-                            startDate={startDate} 
-                            endDate={endDate}
-                        />
-                        <MyStudyList 
-                            title={title} 
-                            startDate={startDate} 
-                            endDate={endDate}
-                        />
+                        {renderMyStudyGroup}
                     </ScrollView>
                 </View>
                 <View style={styles.myStudy}>

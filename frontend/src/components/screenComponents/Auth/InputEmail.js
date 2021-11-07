@@ -4,7 +4,7 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {useNavigation} from "@react-navigation/native";
 
-const InputEmail = () => {
+const InputEmail = (props) => {
     const navigation = useNavigation();
     return (
         <View style={styles.container}>
@@ -24,7 +24,7 @@ const InputEmail = () => {
                 <TextInput
                     style={styles.textInput}
                     placeholder={'ex)noonsong@sookmyung.ac.kr'}
-                    onChangeText={(email)=>setEmail(email)}
+                    onChangeText={(email)=>props.setEmail(email)}
                     autoCapitalize="none"
                 />
                 <TouchableOpacity style={styles.nextButton} onPress={()=>navigation.push('ConfirmEmail')}>
