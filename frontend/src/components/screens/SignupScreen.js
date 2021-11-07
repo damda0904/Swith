@@ -10,7 +10,8 @@ const SignUpScreen = () => {
     const Stack = createStackNavigator();
 
     const [email,setEmail] = useState('');
-    
+    const [isConfirm,setIsConfirm] = useState(false)
+    const [info,setInfo] = useState({})
     return (
         <Stack.Navigator>
             <Stack.Screen name="InputEmail" component={InputEmail} options={{headerShown: false}}/>

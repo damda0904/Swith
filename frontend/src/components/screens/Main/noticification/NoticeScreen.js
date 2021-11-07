@@ -4,7 +4,7 @@ import { View, Text } from 'react-native'
 const NoticeScreen = () => {
     return (
         <View>
-            <Text></Text>
+            <Text>noti</Text>
         </View>
     )
 }
