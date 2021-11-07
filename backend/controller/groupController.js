@@ -26,7 +26,7 @@ export async function createGroup(req, res) {
         thisWeek: 0,
         totalWeeks: totalWeeks
     })
-
+    console.log(groupId)
     res.status(201).json({ groupId, success: true });
 }
 
@@ -72,7 +72,7 @@ export async function getGroups(req, res) {
     else if (keyword) {
         group = await groupRepository.findGroupsByKey(keyword);
     }
-
+    console.log(group)
     res.status(200).json({ group, success: true });
 }
 
