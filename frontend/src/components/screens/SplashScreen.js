@@ -8,7 +8,7 @@ const SplashScreen = ({navigation}) => {
         setTimeout(() => {
         AsyncStorage.getItem('user_id').then((value) =>
             //Home <-> Auth 위치 바꿔야함!
-            navigation.replace(value === null ? 'Home' : 'Auth'),
+            navigation.replace(value === null ? 'Main' : 'Auth'),
         );
         }, 3000);
     }, []);

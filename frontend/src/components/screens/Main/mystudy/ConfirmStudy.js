@@ -1,12 +1,12 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-const MypageScreen = () => {
+const ConfirmStudy = () => {
     return (
         <View>
-            <Text></Text>
+            <Text>confirm</Text>
         </View>
     )
 }
 
-export default MypageScreen
+export default ConfirmStudy
