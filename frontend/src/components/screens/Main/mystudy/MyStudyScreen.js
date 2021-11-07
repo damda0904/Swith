@@ -1,10 +1,10 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-const MyStudyScreen = () => {
+const MyStudyScreen = (props) => {
     return (
         <View>
-            <Text></Text>
+            <Text>my todo</Text>
         </View>
     )
 }

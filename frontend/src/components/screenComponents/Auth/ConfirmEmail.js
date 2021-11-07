@@ -7,7 +7,24 @@ const ConfirmEmail = () => {
     const navigation = useNavigation();
     const [confirmCode,setConfirmCode] = useState(false)
     const [confirm,setConfirm] = useState(false)
+    const [successMsg,setSuccessMsg] = useState('')
 
+    Axios.post('http://127.0.0.1:8080/user/authEmail',confirmCode)
+    .then(response=>{
+    if(response.data.code === confirmCode){
+    // 유저 이메일 저장하기!
+        setSuccessMsg('인증되었습니다.')
+        setConfirm(true)
+    }else{
+        setSuccessMsg('인증번호를 다시 입력해주세요.');
+        setConfirm(false)
+        alert(response.status);
+    }
+    }).catch((error)=>{
+        alert(error)
+        console.warn(error)
+    })
+    
     return (
         <View style={styles.container}>
 
