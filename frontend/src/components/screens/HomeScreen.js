@@ -9,9 +9,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
     const navigation = useNavigation();
-    let title="카카오 코테 뿌시기"
-    let endDate="2021.11.10"
-    let startDate="2021.09.20"
+    let title=["카카오 코테 뿌시기","아침 운동 모임","토익 스터디"]
+    let endDate=["2021.11.10","2021.12.09","2021.12.30"]
+    let startDate=["2021.10.10","2021.10.09","2021.9.30"]
 
 
     const [token,setToken] = useState('');
@@ -33,7 +33,6 @@ const HomeScreen = () => {
                 alert('아이디와 비밀번호를 다시 확인해주세요.');
             }
         }).catch((error)=>{
-            console.warn(error)
         })
     },[])
 
@@ -45,7 +44,7 @@ const HomeScreen = () => {
             if(response.data.success === true){
                 alert('success get study list')
                 setSearchAllList(response.data.group)
-                console.warn(searchAllList)
+                console.warn(response.data.group)
             }else{
                 alert('해당하는 스터디가 없네요!'+response.status);
             }
@@ -58,12 +57,17 @@ const HomeScreen = () => {
     const [myStudy,setMyStudy] = useState([])
     const renderMyStudyGroup = myStudy.map((group,index)=>{
         return(
-            <MyStudyList 
-                key={index} 
-                title={group[index].title} 
-                startDate={group[index].startDate} 
-                endDate={group[index].endDate}
-            />
+            <TouchableOpacity key={index} onPress={()=>
+                    navigation.push('Detail')
+                    // navigation.navigate('Detail',{...group})
+                }>
+                <MyStudyList 
+                    key={index} 
+                    title={group[index].title} 
+                    startDate={group[index].startDate} 
+                    endDate={group[index].endDate}
+                />
+            </TouchableOpacity>
         )
     })
 
@@ -82,11 +86,20 @@ const HomeScreen = () => {
                     <Text style={styles.myStudyTitle}>눈송이님이 참여한 스터디</Text>
                     <ScrollView style={{width:'100%'}} horizontal={true}>
                         <MyStudyList 
-                            title={title} 
-                            startDate={startDate} 
-                            endDate={endDate}
+                            onPress={()=>navigation.push('SearchMajor')}
+                            title={title[0]} 
+                            startDate={startDate[0]} 
+                            endDate={endDate[0]}
+                            img={require('../../../assets/kakao.jpeg')}
                         />
-                        {renderMyStudyGroup}
+                        <MyStudyList 
+                            onPress={()=>navigation.push('SearchMajor')}
+                            title={title[1]} 
+                            startDate={startDate[1]} 
+                            endDate={endDate[1]}
+                            img={require('../../../assets/running.jpeg')}
+                        />
+                        {/* {renderMyStudyGroup} */}
                     </ScrollView>
                 </View>
                 <View style={styles.myStudy}>

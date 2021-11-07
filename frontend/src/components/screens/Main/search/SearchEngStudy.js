@@ -11,22 +11,7 @@ import SearchDetail from './SearchDetail';
 const SearchEngStudy = () => {
 
     const navigation = useNavigation();
-    const Stack = createStackNavigator();
-
     const [searchList,setSearchList] = useState([])
-
-    const Detail = (id) => {
-        return (
-            <Stack.Navigator>
-                <Stack.Screen 
-                    name="SearchDetail" 
-                    children={({navigation})=>
-                        <SearchDetail id={id} navigation={navigation}/>} 
-                    options={{headerShown: false}}
-                />
-            </Stack.Navigator>
-        )
-    }
 
     const category = '어학'
     useEffect(()=>{
@@ -49,9 +34,7 @@ const SearchEngStudy = () => {
         Axios.get(`http://localhost:8080/group?category=${category}&keyword=${keyword}`)
         .then(response=>{
             if(response.data.success === true){
-                alert('success get study list')
                 setSearchList(response.data.group)
-                console.warn(searchList)
             }else{
                 alert('해당하는 스터디가 없네요!');
             }
@@ -63,7 +46,6 @@ const SearchEngStudy = () => {
 
     const renderStudyGroup = searchList.map((group,index)=>{
         return(
-            
             <TouchableOpacity key={index} onPress={()=>
                     navigation.navigate('SearchDetail',{...group})
                 }>

@@ -7,7 +7,7 @@ const MyStudyList = (props) => {
     const navigation = useNavigation();
     return (
         <TouchableOpacity style={styles.card} onPress={()=>navigation.push("Detail")}>
-            <Image style={styles.image} source={require('../../../../assets/logo.png')}/>
+            <Image style={styles.image} source={props.img}/>
             <Text style={styles.title}>{props.title}</Text>
             <Text style={styles.date}>{props.startDate}~{props.endDate}</Text>
         </TouchableOpacity>

@@ -1,11 +1,11 @@
 import React,{useState,useEffect} from 'react'
 import { View, Text, StyleSheet,Image} from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionic from "react-native-vector-icons/Ionicons";
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import {useNavigation} from "@react-navigation/native";
 import Axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SearchDetail = ({route,navigation}) => {
     const group = route.params
@@ -13,24 +13,46 @@ const SearchDetail = ({route,navigation}) => {
     const [groupinfo,setGroupInfo] = useState({})
     const [leading,setLeading] = useState(false)
     const [following,setFollowing] = useState(false)
+    //token
+    const [token,setToken] = useState('');
+    AsyncStorage.getItem('token')
+    .then((value)=>setToken(value));
 
-    useEffect(()=>{
-        Axios.get(`http://localhost:8080/group/${group._id}`)
-        .then(response=>{
+    const followStudy = () => {
+        const config = {
+            headers:{"Authorization": `Bearer ${token}`}
+        };
+
+        Axios.put(`http://localhost:8080/group/apply/${group._id}`,config)
+        .then((response)=>{
             if(response.data.success === true){
-                alert('success get study info')
-                setGroupInfo(response.data.group)
-                console.warn(groupinfo.participants.length)
-                setLeading(response.data.leading)
-                setFollowing(response.data.following)
+                alert('스터디 참여가 완료되었습니다.')
+                setFollowing(true)
             }else{
-                alert(`해당 스터디는 접근할 수 없습니다.${response.status}`);
+                alert('참여 불가능한 스터디입니다.')
             }
-        }).catch((error)=>{
+        }).catch((error) => {
             alert(error)
-            console.warn(error)
         })
-    },[])
+    }
+
+    // useEffect(()=>{
+    //     Axios.get(`http://localhost:8080/group/${group._id}`)
+    //     .then(response=>{
+    //         if(response.data.success === true){
+    //             alert('success get study info')
+    //             console.warn(groupinfo.group)
+    //             setGroupInfo(response.data.group)
+    //             if(groupinfo.group.id === groupinfo.group.leader) setLeading(response.data.leading)
+    //             setFollowing(response.data.following)
+    //         }else{
+    //             alert(`해당 스터디는 접근할 수 없습니다.${response.status}`);
+    //         }
+    //     }).catch((error)=>{
+    //         alert(error)
+    //         console.warn(error)
+    //     })
+    // },[])
     
     return (
         <SafeAreaView style={styles.container}>
@@ -38,37 +60,37 @@ const SearchDetail = ({route,navigation}) => {
                 <TouchableOpacity onPress={()=>navigation.goBack()}>
                     <Ionic name="arrow-back" style={{fontSize:25,color:'white',position:'absolute',left:-100,top:-10}}/>
                 </TouchableOpacity>
-                <Text style={styles.title}>{groupinfo.group.title}</Text>
+                <Text style={styles.title}>{group.title}</Text>
             </View>
             <View style={styles.desc}>
                 <View style={styles.info}>
-                    <Text style={styles.infoLeft}>기간</Text>
-                    <Text style={styles.infoRight}>{groupinfo.group.startDate} ~ {groupinfo.group.endDate}</Text>
-                </View>
-                <View style={styles.info}>
                     <Text style={styles.infoLeft}>인원</Text>
-                    <Text style={styles.infoRight}>{groupinfo.group.personnel}명</Text>
+                    <Text style={styles.infoRight}>{group.personnel}명</Text>
                 </View>
                 <View style={styles.info}>
-                    <Text style={styles.infoLeft}>비대면/대면</Text>
-                    <Text style={styles.infoRight}>{groupinfo.group.faceToFace ? '대면' : '비대면'}</Text>
+                    <Text style={styles.infoLeft}>기간</Text>
+                    <Text style={styles.infoRight}>2021-09-30~2021-11-30</Text>
                 </View>
                 <View style={styles.info}>
                     <Text style={styles.infoLeft}>모집상태</Text>
-                    <Text style={styles.infoRight}>{groupinfo.group.recruit ? '모집중' : '모집완료'}</Text>
+                    <Text style={styles.infoRight}>모집중</Text>
+                </View>
+                <View style={styles.info}>
+                    <Text style={styles.infoLeft}>비대면/대면</Text>
+                    <Text style={styles.infoRight}>{group.faceToFace ? '대면' : '비대면'}</Text>
                 </View>
                 <View style={styles.info}>
                     <Text style={styles.infoDesc}>
-                        {groupinfo.group.description}
+                        {group.description}
                     </Text>
                 </View>
             </View>
             <View style={styles.person}>
-                <Text style={styles.personCountTitle}>지금까지 {groupinfo.participants.length}명이 참여했어요!</Text>
+                <Text style={styles.personCountTitle}>지금까지 5명이 참여했어요!</Text>
                 <ScrollView horizontal style={styles.personWrapper}>
                     <View style={styles.personProfile}>
                         <Image style={styles.personImage} source={require('../../../../../assets/logo.png')}/>
-                        <Text style={styles.personName}>김민지</Text>
+                        <Text style={styles.personName}>군만두</Text>
                     </View>
                     <View style={styles.personProfile}>
                         <Image style={styles.personImage} source={require('../../../../../assets/logo.png')}/>
@@ -76,25 +98,36 @@ const SearchDetail = ({route,navigation}) => {
                     </View>
                     <View style={styles.personProfile}>
                         <Image style={styles.personImage} source={require('../../../../../assets/logo.png')}/>
-                        <Text style={styles.personName}>김민지</Text>
+                        <Text style={styles.personName}>서브웨이</Text>
                     </View>
                     <View style={styles.personProfile}>
                         <Image style={styles.personImage} source={require('../../../../../assets/logo.png')}/>
-                        <Text style={styles.personName}>김민지</Text>
+                        <Text style={styles.personName}>물만두</Text>
                     </View>
                     <View style={styles.personProfile}>
                         <Image style={styles.personImage} source={require('../../../../../assets/logo.png')}/>
-                        <Text style={styles.personName}>김민지</Text>
+                        <Text style={styles.personName}>사이다</Text>
                     </View>
                     <View style={styles.personProfile}>
                         <Image style={styles.personImage} source={require('../../../../../assets/logo.png')}/>
-                        <Text style={styles.personName}>김민지</Text>
+                        <Text style={styles.personName}>콩이</Text>
                     </View>
                 </ScrollView>
             </View>
-            <TouchableOpacity style={styles.participate} onPress={()=>alert('신청완료')}>
-                <Text style={{fontSize:16,color:'white',fontWeight:'600'}}>신청하기</Text>
+            {/* {leading ? 
+            (
+            <TouchableOpacity style={styles.participate} onPress={()=>alert('수정완료')}>
+                <Text style={{fontSize:16,color:'white',fontWeight:'600'}}>
+                    수정하기
+                </Text>
             </TouchableOpacity>
+            ) : ( */}
+            <TouchableOpacity style={styles.participate} onPress={()=>followStudy()}>
+                <Text style={{fontSize:16,color:'white',fontWeight:'600'}}>
+                    신청하기
+                </Text>
+            </TouchableOpacity>
+            {/* )} */}
         </SafeAreaView>
     )
 }
@@ -128,18 +161,19 @@ const styles = StyleSheet.create({
     },
     info:{
         flexDirection:'row',
-        justifyContent:'space-between',
+        justifyContent:'flex-start',
         alignItems:'center',
-        marginVertical:5
+        marginVertical:6
     },
     infoLeft:{
         color:"#696969",
-        fontSize:13
+        fontSize:13,
+        width:70
     },
     infoRight:{
         color:"#222222",
         fontSize:13,
-        marginLeft:10
+        marginLeft:20
     },
     infoDesc:{
         marginTop:18,
