@@ -6,11 +6,44 @@ import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import SelectDropdown from 'react-native-select-dropdown'
 import Axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterStudy = () => {
     const navigation = useNavigation();
     const categories = ['전공','취업','어학','자격증','고시/공무원','자기계발','습관','기타']
     const ftf_options = ['대면','비대면']
+    
+    //const submitRegisterStudy = () => {
+        // let studyInfo = {
+        //     email:userEmail,
+        //     password:userPassword
+        // };
+
+        
+
+        // AsyncStorage.getItem('token').then((value)=>{
+        //     Axios.post('http://localhost:8080/group/',studyInfo,{headers:{
+        //         Authorization: `Bearer ${token}`,
+        //     }})
+        //     .then(response=>{
+        //         if(response.data.success === true){
+        //         // 유저 이메일 저장하기!
+        //             alert('success')
+        //             AsyncStorage.setItem('user_id',userEmail); 
+        //             AsyncStorage.setItem('token',response.data.token); 
+        //             navigation.replace('Main');
+        //         }else{
+        //             setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
+        //             alert(response.status);
+        //         }
+        //     }).catch((error)=>{
+        //         alert(error)
+        //         console.warn(error)
+        //     })
+        // })
+    //}
+
+
     // const getPhotos = async () => {
     //     const { assets: photos } = await MediaLibrary.getAssetsAsync();
     //     setPhotos(photos);
@@ -71,28 +104,34 @@ const RegisterStudy = () => {
     const [facetoface,setFacetoface] = useState(false) //대면 여부
     const [personnel,setPersonnel] = useState(0) //인원
 
-    const pickImage = async() => {
-        const {status_roll} = await ImagePicker.PermissionStatus.askA
-    }
+    // const pickImage = async() => {
+    //     const {status_roll} = await ImagePicker.PermissionStatus.askA
+    // }
 
-    const postStudy = () => {
+    const submitRegisterStudy = async() => {
+        const token = localStorage.getItem('token')
+
         let studyInfo = {
             category:category,
             mainImage:mainImage,
             title:title,
             description:description,
-            startDate:startDate,
-            endDate:endDate,
+            startDate:new Date('2021-04-25'),
+            endDate:new Date('2021-11-25'),
             keyword:keyword,
             faceToFace:facetoface,
             personnel:personnel
         }
 
-        Axios.post('http://localhost:8080/group/',studyInfo)
+        const config = {
+            headers:{"Authorization": `Bearer ${token}`}
+        };
+
+        Axios.post('http://localhost:8080/group/',studyInfo,config)
         .then((response)=>{
             if(response.data.success === true){
                 alert('success post')
-                navigation.push('Home')
+                navigation.push('Main')
             }else{
                 alert(`fail post:${response.status}`)
             }
@@ -100,7 +139,6 @@ const RegisterStudy = () => {
             alert(error)
         })
     }
-
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <TouchableOpacity onPress={()=>navigation.push('Home')} style={styles.back}>
@@ -174,7 +212,7 @@ const RegisterStudy = () => {
                     />
                 </View>
             </View>
-            <TouchableOpacity style={styles.nextButton} onPress={()=>postStudy()}>
+            <TouchableOpacity style={styles.nextButton} onPress={()=>submitRegisterStudy()}>
                 <Text style={styles.next}>완료</Text>
             </TouchableOpacity>
         </ScrollView>

@@ -1,10 +1,11 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { StyleSheet, View, Text, TextInput, ScrollView} from 'react-native'
 import MyStudyList from '../screenComponents/Main/MyStudyList';
 import Axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {useNavigation} from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -12,18 +13,38 @@ const HomeScreen = () => {
     let endDate="2021.11.10"
     let startDate="2021.09.20"
     const [myStudy,setMyStudy] = useState([])
-    // Axios.get('http://localhost:8080/user/myGroups')
-    // .then(response=>{
-    //     if(response.data.success === true){
-    //         setMyStudy(response.data.group)
-    //     }else{
-    //         setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
-    //         alert(response.status);
-    //     }
-    // }).catch((error)=>{
-    //     alert(error)
-    //     console.warn(error)
-    // })
+
+    const [token,setToken] = useState('');
+    AsyncStorage.getItem('token')
+    .then((value)=>setToken(value));
+
+
+    useEffect(()=>{
+        const config = {
+            headers:{"Authorization": `Bearer ${token}`}
+        };
+
+        Axios.get('http://localhost:8080/user/myGroups',config)
+        .then(response=>{
+            if(response.data.success === true){
+                alert('success get group')
+                setMyStudy(response.data.group)
+                console.warn(myStudy)
+            }else{
+                setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
+                alert('아이디와 비밀번호를 다시 확인해주세요.');
+            }
+        }).catch((error)=>{
+            alert(error)
+            console.warn(error)
+        })
+    },[])
+
+    
+
+    const RenderMyGroups = () => {
+        
+    }
 
     // const renderMyStudyGroup = myStudy.map((group,index)=>{
     //     return(
