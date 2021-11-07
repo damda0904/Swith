@@ -49,17 +49,18 @@ export async function login(req, res) {
     const password = req.body.password;
 
     const user = await userRepository.findByEmail(email)
+
     if (!user) {
-        res.status(404).json({ message: "아이디 혹은 비밀번호를 확인해주세요" })
+        return res.status(400).json({ message: "아이디 혹은 비밀번호를 확인해주세요" })
     }
 
     const isValidPasswd = await bcrypt.compare(password, user.password);
     if (!isValidPasswd) {
-        res.status(404).json({ message: "아이디 혹은 비밀번호를 확인해주세요" })
+        return res.status(400).json({ message: "아이디 혹은 비밀번호를 확인해주세요" })
     }
 
     const token = await createToken(user.id);
-    res.status(200).json({ token, success: true })
+    return res.status(200).json({ token, success: true })
 }
 
 
