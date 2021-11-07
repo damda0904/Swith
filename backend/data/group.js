@@ -39,6 +39,7 @@ export async function createGroup(group) {
 export async function findById(id) {
     return StudyGroup.findById(id)
         .then(async (group) => {
+
             const participants = await userRepository.findUsers(group.participants)
 
             return { group, participants }

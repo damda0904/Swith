@@ -9,7 +9,7 @@ const schema = new Mongoose.Schema({
     studentId: { type: Number, required: true },
     profile: String,
     studyGroup: [{
-        groupId: Number,
+        groupId: { type: String, required: true },
         achieveNum: { type: Number, required: true }
     }]
 })
@@ -48,4 +48,45 @@ export async function findById(id) {
 export async function findByEmail(email) {
     console.log(email)
     return User.findOne({ email })
+}
+
+export async function applyStudy(userId, groupId) {
+    return User.findById(userId)
+        .then(user => {
+            let studyGroup = user.studyGroup ? user.studyGroup : [];
+
+            studyGroup.push({ groupId, achieveNum: 0 })
+
+            return User.findByIdAndUpdate(userId, { studyGroup })
+        })
+}
+
+export async function cancelStudy(userId, groupId) {
+    return User.findById(userId)
+        .then(user => {
+            let studyGroup = user.studyGroup;
+
+            for (var i = 0; i < studyGroup.length; i++) {
+                if (studyGroup[i].groupId == groupId) {
+                    studyGroup.splice(i, 1);
+                }
+            }
+
+            return User.findByIdAndUpdate(userId, { studyGroup })
+        })
+}
+
+export async function updateAchieve(userId, groupId) {
+    return User.findOne({ id: userId })
+        .then((user) => {
+            let groups = user.studyGroup;
+
+            for (var i = 0; i < groups.length; i++) {
+                if (groups[i].groupId == groupId) {
+                    groups[i].achieveNum += 1
+                }
+            }
+
+            return User.findOneAndUpdate({ id: userId }, { studyGroup: groups })
+        })
 }

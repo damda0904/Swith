@@ -22,7 +22,7 @@ export async function signup(req, res) {
     const findEmail = await userRepository.findByEmail(email)
     console.log(findEmail);
     if (findEmail) {
-        res.status(409).json({ message: "이미 등록된 이메일입니다." })
+        return res.status(409).json({ message: "이미 등록된 이메일입니다." })
     }
     else {
         const hashed = await bcrypt.hash(password, bcryptSalt);
@@ -49,17 +49,18 @@ export async function login(req, res) {
     const password = req.body.password;
 
     const user = await userRepository.findByEmail(email)
+
     if (!user) {
-        res.status(404).json({ message: "아이디 혹은 비밀번호를 확인해주세요" })
+        return res.status(404).json({ message: "아이디 혹은 비밀번호를 확인해주세요" })
     }
 
     const isValidPasswd = await bcrypt.compare(password, user.password);
     if (!isValidPasswd) {
-        res.status(404).json({ message: "아이디 혹은 비밀번호를 확인해주세요" })
+        return res.status(404).json({ message: "아이디 혹은 비밀번호를 확인해주세요" })
     }
 
     const token = await createToken(user.id);
-    res.status(200).json({ token, success: true })
+    return res.status(200).json({ token, success: true })
 }
 
 
