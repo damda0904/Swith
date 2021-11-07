@@ -1,9 +1,11 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
 import Ionic from "react-native-vector-icons/Ionicons";
 import {useNavigation} from "@react-navigation/native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchStudyItem from '../../../screenComponents/Main/SearchStudyItem'
+import Axios from 'axios';
+import categorySearchList from '../../../screenComponents/Main/CategoryStudyList'
 
 const SearchCertStudy = () => {
 
@@ -15,6 +17,25 @@ const SearchCertStudy = () => {
     let endDate = "2021.11.20"
     let person = 5
     let offline = "대면"
+
+    
+    const [searchKeyword,setSearchKeyword] = useState('')
+    const categorySearchList = categorySearchList('자격증',searchKeyword)
+    
+    
+    const renderStudyGroup = searchList.map((group,index)=>{
+        return(
+            <SearchStudyItem key={index}
+                title={group.title} 
+                desc={group.desc} 
+                startDate={group.startDate} 
+                endDate={group.endDate} 
+                person={group.person} 
+                offline={group.offline}
+            />
+        )
+    })
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
@@ -27,6 +48,8 @@ const SearchCertStudy = () => {
                 <TextInput
                     placeholder="찾고싶은 스터디를 검색해보세요!"
                     style={styles.searchInput}
+                    onChangeText={(searchKeyword)=>setSearchKeyword(searchKeyword)}
+                    onSubmitEditing={()=>searchStudy('자격증',searchKeyword)}
                 />
                 <View style={styles.studyList}>
                     <SearchStudyItem title={title} desc={desc} startDate={startDate} endDate={endDate} person={person} offline={offline}/>

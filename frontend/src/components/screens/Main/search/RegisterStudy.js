@@ -12,87 +12,11 @@ const RegisterStudy = () => {
     const navigation = useNavigation();
     const categories = ['전공','취업','어학','자격증','고시/공무원','자기계발','습관','기타']
     const ftf_options = ['대면','비대면']
-    
-    //const submitRegisterStudy = () => {
-        // let studyInfo = {
-        //     email:userEmail,
-        //     password:userPassword
-        // };
 
-        
-
-        // AsyncStorage.getItem('token').then((value)=>{
-        //     Axios.post('http://localhost:8080/group/',studyInfo,{headers:{
-        //         Authorization: `Bearer ${token}`,
-        //     }})
-        //     .then(response=>{
-        //         if(response.data.success === true){
-        //         // 유저 이메일 저장하기!
-        //             alert('success')
-        //             AsyncStorage.setItem('user_id',userEmail); 
-        //             AsyncStorage.setItem('token',response.data.token); 
-        //             navigation.replace('Main');
-        //         }else{
-        //             setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
-        //             alert(response.status);
-        //         }
-        //     }).catch((error)=>{
-        //         alert(error)
-        //         console.warn(error)
-        //     })
-        // })
-    //}
-
-
-    // const getPhotos = async () => {
-    //     const { assets: photos } = await MediaLibrary.getAssetsAsync();
-    //     setPhotos(photos);
-    //     // 첫번째 사진 선택을 기본값으로
-    // };
-
-    // //접근 권한 확인
-
-    // const getIOSPermissions = async () => {
-    //     // 유저가 준 권한이 있는지 확인한다.
-    //     const { accessPrivileges, canAskAgain } =
-    //     await MediaLibrary.getPermissionsAsync();
-    //     // 권한이 없고 요청을 할 수 있다면,
-    //     if (accessPrivileges === "none" && canAskAgain) {
-    //     // 권한 요청
-    //     const { accessPrivileges } = await MediaLibrary.requestPermissionsAsync();
-    //     if (accessPrivileges !== "none") {
-    //         getPhotos();
-    //     }
-    //     // 권한이 이미 있으면, 사진을 가져옴
-    //     } else if (accessPrivileges !== "none") {
-    //         getPhotos();
-    //     // 권한 없음
-    //     } else {
-    //     // 다시 권한 확인;
-    //         getPermissions();
-    //     }
-    // };
-    // const getAndroidPermissions = async () => {
-    //     const { status, canAskAgain } = await MediaLibrary.getPermissionsAsync();
-    //     if (status === "undetermined" && canAskAgain) {
-    //         const { status } = await MediaLibrary.requestPermissionsAsync();
-    //     if (status !== "undetermined") {
-    //         getPhotos();
-    //     }
-    //     } else if (status !== "undetermined") {
-    //         getPhotos();
-    //     } else {
-    //         getAndroidPermissions();
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     if (Platform.OS === "ios") {
-    //         getIOSPermissions();
-    //     } else {
-    //         getAndroidPermissions();
-    //     }
-    // }, []);
+    //token
+    const [token,setToken] = useState('');
+    AsyncStorage.getItem('token')
+    .then((value)=>setToken(value));
 
     const [category,setCategory] = useState('') //카테고리
     const [mainImage,setMainImage] = useState(null) //이미지
@@ -104,30 +28,25 @@ const RegisterStudy = () => {
     const [facetoface,setFacetoface] = useState(false) //대면 여부
     const [personnel,setPersonnel] = useState(0) //인원
 
-    // const pickImage = async() => {
-    //     const {status_roll} = await ImagePicker.PermissionStatus.askA
-    // }
-
     const submitRegisterStudy = async() => {
-        const token = localStorage.getItem('token')
-
         let studyInfo = {
             category:category,
             mainImage:mainImage,
             title:title,
             description:description,
-            startDate:new Date('2021-04-25'),
-            endDate:new Date('2021-11-25'),
+            startDate:new Date(startDate),
+            endDate:new Date(endDate),
             keyword:keyword,
             faceToFace:facetoface,
             personnel:personnel
         }
 
+        //headers
         const config = {
             headers:{"Authorization": `Bearer ${token}`}
         };
 
-        Axios.post('http://localhost:8080/group/',studyInfo,config)
+        Axios.post('http://localhost:8080/group/', studyInfo, config)
         .then((response)=>{
             if(response.data.success === true){
                 alert('success post')
@@ -164,6 +83,7 @@ const RegisterStudy = () => {
                     <TextInput 
                         style={styles.textInput}
                         placeholder={'스터디 제목을 입력하세요.'}
+                        onChangeText={(title)=>setTitle(title)}
                     />
                 </View>
                 <View style={styles.inputItem}>
@@ -171,14 +91,22 @@ const RegisterStudy = () => {
                     <TextInput 
                         style={styles.textInput}
                         placeholder={'스터디에 대한 설명을 작성해주세요.'}
-                        
+                        multiline
+                        numberOfLines={8}
+                        onChangeText={(description)=>setDescription(description)}
                     />
                 </View>
                 <View style={styles.inputItem}>
                     <Text style={styles.inputLabel}>기간</Text>
                     <TextInput 
                         style={styles.textInput}
-                        placeholder={'기간을 작성해주세요.'}
+                        placeholder={'시작 날짜를 YYYY-MM-DD 형태로 작성해주세요.'}
+                        onChangeText={(startDate)=>setStartDate(startDate)}
+                    />
+                    <TextInput 
+                        style={styles.textInput}
+                        placeholder={'종료 날짜를 YYYY-MM-DD 형태로 작성해주세요.'}
+                        onChangeText={(endDate)=>setEndDate(endDate)}
                     />
                 </View>
                 <View style={styles.inputItem}>
@@ -186,6 +114,7 @@ const RegisterStudy = () => {
                     <TextInput 
                         style={styles.textInput}
                         placeholder={'인원을 작성해주세요.'}
+                        onChangeText={(personnel)=>setPersonnel(personnel)}
                     />
                 </View>
                 <View style={styles.inputItem}>
@@ -209,6 +138,7 @@ const RegisterStudy = () => {
                     <TextInput 
                         style={styles.textInput}
                         placeholder={'키워드를 작성해주세요.'}
+                        onChangeText={(keyword)=>setKeyword(keyword)}
                     />
                 </View>
             </View>
