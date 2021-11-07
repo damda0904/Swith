@@ -13,7 +13,7 @@ function required(key, defaultValue = undefined) {
 export const config = {
     port: parseInt(required('PORT', 8080)),
     cors: {
-        allowedOrigin: required('CORS_ALLOW_ORIGIN')
+        allowedOrigin: required('CORS_ALLOW_ORIGIN'),
     },
     gmail: {
         address: required('GMAIL_ADDRESS'),
@@ -24,7 +24,6 @@ export const config = {
     },
     jwt: {
         secretKey: required('JWT_SECRET'),
-        expiresInDays: required('JWT_EXPIRES_SEC', 86400)
     },
     bcrypt: {
         salt: parseInt(required('BCRYPT_SALT'))

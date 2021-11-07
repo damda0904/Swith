@@ -9,20 +9,21 @@ import { config } from './config.js';
 import { connectDB } from './db/database.js';
 
 const app = express();
+const router = express.Router();
 
 const corsOption = {
     origin: config.cors.allowedOrigin,
     optionsSuccessStatus: 200,
-}
+};
 
 app.use(express.json())
 app.use(cors(corsOption));
 app.use(helmet());
 
-// app.use('/test', router.get('/', (req, res) => {
-//     console.log("test")
-//     res.status(200).json({ message: "connection is okay! :D" })
-// }));
+app.use('/test', router.get('/', (req, res) => {
+    console.log("test")
+    res.status(200).json({ message: "connection is okay! :D" })
+}));
 
 app.use('/user', authRouter);
 app.use('/group', groupRouter);
@@ -40,5 +41,5 @@ app.use((error, req, res, next) => {
 
 connectDB().then(() => {
     const server = app.listen(config.port);
-    console.log("listening")
+    console.log(`Server is started... ${new Date()}`);
 })
