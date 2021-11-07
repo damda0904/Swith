@@ -11,7 +11,7 @@ const bcryptSalt = config.bcrypt.salt;
 
 //토큰생성
 function createToken(id) {
-    return jwt.sign({ id }, jwtSecretKey, { expiresIn: jwtExpires });
+    return jwt.sign({ id }, jwtSecretKey);
 }
 
 
