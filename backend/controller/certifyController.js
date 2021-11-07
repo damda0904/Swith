@@ -6,6 +6,12 @@ export async function certify(req, res) {
     const userId = req.userId;
     const { achieve, notAchieve, certifiedImg, week } = req.body;
 
+    const achieveLevel = (achieve.length / (achieve.length + notAchieve.length)) * 100
+
+    if (achieveLevel < 50) {
+        return res.status(202).json({ message: "인증 조건을 완료하지 못하여 인증되지 않았습니다.", success: true })
+    }
+
     const certifyId = await certifyRepository.certify(userId, groupId,
         {
             achieve,
