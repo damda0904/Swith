@@ -20,8 +20,9 @@ const SearchEngStudy = () => {
     const [searchKeyword,setSearchKeyword] = useState('')
     const [searchList,setSearchList] = useState([])
 
+    const category = '어학'
     useEffect(()=>{
-        Axios.get(`http://localhost:8080/group?category='어학'`)
+        Axios.get(`http://localhost:8080/group?category=${category}`)
         .then(response=>{
             if(response.data.success === true){
                 alert('success get study list')

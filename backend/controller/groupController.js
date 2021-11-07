@@ -1,6 +1,5 @@
 import { doesNotMatch } from 'assert';
 import * as groupRepository from '../data/group.js';
-import * as userRepository from '../data/user.js';
 
 
 //스터디 생성
@@ -27,7 +26,7 @@ export async function createGroup(req, res) {
         thisWeek: 0,
         totalWeeks: totalWeeks
     })
-    console.log(groupId)
+
     res.status(201).json({ groupId, success: true });
 }
 
@@ -73,7 +72,7 @@ export async function getGroups(req, res) {
     else if (keyword) {
         group = await groupRepository.findGroupsByKey(keyword);
     }
-    console.log(group)
+
     res.status(200).json({ group, success: true });
 }
 
@@ -82,18 +81,18 @@ export async function apply(req, res) {
     const id = req.params.id;
     const userId = req.userId;
 
+    console.log(userId);
+
     const groupId = await groupRepository.apply(id, userId);
 
     if (groupId == -1) {
-        return res.status(400).json({ message: "스터디 정원이 모두 찼습니다" })
+        res.status(400).json({ message: "스터디 정원이 모두 찼습니다" })
     }
     else if (groupId == -2) {
-        return res.status(400).json({ message: "이미 지원한 스터디입니다" })
+        res.status(400).json({ message: "이미 지원한 스터디입니다" })
     }
     else {
-        return userRepository.applyStudy(userId, id).then(() => {
-            res.status(200).json({ groupId, success: true });
-        })
+        res.status(200).json({ groupId, success: true });
     }
 }
 

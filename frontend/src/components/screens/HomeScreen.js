@@ -27,15 +27,12 @@ const HomeScreen = () => {
         Axios.get('http://localhost:8080/user/myGroups',config)
         .then(response=>{
             if(response.data.success === true){
-                alert('success get group')
                 setMyStudy(response.data.group)
-                console.warn(myStudy)
             }else{
                 setErrorText('아이디와 비밀번호를 다시 확인해주세요.');
                 alert('아이디와 비밀번호를 다시 확인해주세요.');
             }
         }).catch((error)=>{
-            alert(error)
             console.warn(error)
         })
     },[])
