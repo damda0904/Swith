@@ -40,7 +40,7 @@ const HomeScreen = () => {
     const [searchKeyword,setSearchKeyword] = useState('')
     const [searchAllList,setSearchAllList] = useState([])
     const searchAllStudy = (keyword) => {
-        Axios.get(`http://localhost:8080/group?keyword=${keyword}`)
+        Axios.get(`http://localhost:8080/group?category=${keyword}&keyword=${keyword}`)
         .then(response=>{
             if(response.data.success === true){
                 alert('success get study list')

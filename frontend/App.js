@@ -41,6 +41,7 @@ import NoticeScreen from './src/components/screens/Main/noticification/NoticeScr
 
 //mypage
 import ProfileScreen from './src/components/screens/Main/mypage/MypageScreen';
+import SearchDetail from './src/components/screens/Main/search/SearchDetail';
 
 const Stack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -70,6 +71,7 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name="SearchJob" component={SearchJobStudy} options={{headerShown: false}}/>
       <HomeStack.Screen name="SearchSelf" component={SearchSelfStudy} options={{headerShown: false}}/>
       <HomeStack.Screen name="SearchExam" component={SearchExamStudy} options={{headerShown: false}}/>
+      <HomeStack.Screen name="SearchDetail" component={SearchDetail} options={{headerShown: false}}/>
       <HomeStack.Screen name="Detail" component={StudyDetail} options={{headerShown: false}}/>
       <HomeStack.Screen name="RegisterStudy" component={RegisterStudy} options={{headerShown: false}}/>
     </Stack.Navigator>

@@ -2,10 +2,10 @@ import React,{useState} from 'react'
 import { View, Text } from 'react-native'
 import Axios from 'axios'
 
-const CategoryStudyList = (category,keyword) => {
+const CategoryStudyList = (category) => {
 
     const [searchList,setSearchList] = useState([])
-    Axios.get(`http://localhost:8080/group?category=${category}&keyword=${keyword}`)
+    Axios.get(`http://localhost:8080/group?category=${category}`)
     .then(response=>{
         if(response.data.success === true){
             alert('success get study list')

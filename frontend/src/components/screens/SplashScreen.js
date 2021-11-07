@@ -6,8 +6,8 @@ const SplashScreen = ({navigation}) => {
 
     useEffect(() => {
         setTimeout(() => {
-        AsyncStorage.clear()
-        AsyncStorage.getItem('user_id').then((value) =>
+        // AsyncStorage.clear()
+        AsyncStorage.getItem('token').then((value) =>
             //Home <-> Auth 위치 바꿔야함!
             navigation.replace(value === null ? 'Auth' : 'Main'),
         );
