@@ -9,10 +9,14 @@ import { config } from './config.js';
 import { connectDB } from './db/database.js';
 
 const app = express();
-const router = express.Router();
+
+const corsOption = {
+    origin: config.cors.allowedOrigin,
+    optionsSuccessStatus: 200,
+}
 
 app.use(express.json())
-app.use(cors());
+app.use(cors(corsOption));
 app.use(helmet());
 
 // app.use('/test', router.get('/', (req, res) => {
@@ -35,6 +39,6 @@ app.use((error, req, res, next) => {
 })
 
 connectDB().then(() => {
-    const server = app.listen(config.host.port);
+    const server = app.listen(config.port);
     console.log("listening")
 })

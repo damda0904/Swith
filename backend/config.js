@@ -11,8 +11,9 @@ function required(key, defaultValue = undefined) {
 }
 
 export const config = {
-    host: {
-        port: parseInt(required('HOST_PORT', 8080))
+    port: parseInt(required('PORT', 8080)),
+    cors: {
+        allowedOrigin: required('CORS_ALLOW_ORIGIN')
     },
     gmail: {
         address: required('GMAIL_ADDRESS'),
