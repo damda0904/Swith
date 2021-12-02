@@ -25,9 +25,10 @@
 
 
 # 사용 기술
-1. frontent : react-native
-2. backend : node JS
-3. server cloud : platform.sh
+1. frontent : React-native
+2. backend : Node JS
+3. database : MongoDB, mongoose
+4. server cloud : Platform.sh
 
 
 
