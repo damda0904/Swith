@@ -11,13 +11,13 @@
 
 
 # Deployment
-드라이브 링크를 통해 다운받으시면 됩니다.
+~~드라이브 링크를 통해 다운받으시면 됩니다.~~
 
->Application apk file: https://drive.google.com/file/d/1ak8buMRRIhhywpt064KFj8Poxf1Qksxs/view?usp=sharing
+~~>Application apk file: https://drive.google.com/file/d/1ak8buMRRIhhywpt064KFj8Poxf1Qksxs/view?usp=sharing~~
 
-백엔드 배포 URL
+~~백엔드 배포 URL~~
 
->Backend Deployment: https://www.master-7rqtwti-njyfxwqq3gv3q.au.platformsh.site/
+~~>Backend Deployment: https://www.master-7rqtwti-njyfxwqq3gv3q.au.platformsh.site/~~
 
 
 
